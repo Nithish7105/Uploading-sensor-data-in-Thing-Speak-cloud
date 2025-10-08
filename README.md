@@ -1,4 +1,8 @@
-# Uploading temperature sensor data in Thing Speak cloud
+# NAME: NITHISH KUMAR.B
+# REG.NO: 212223040134
+
+
+# EXP 3-Uploading temperature sensor data in Thing Speak cloud
 
 # AIM:
 To monitor the temperature sensor data in the Thing speak using an ESP32 controller.
@@ -71,10 +75,75 @@ Automatically act on your data and communicate using third-party services like T
 
 
 # PROGRAM:
+```
+#include "DHT.h"
+#include "ThingSpeak.h"
+#include <WiFi.h>
 
+char ssid[]="IPHONE 13";
+char pass[]="NITHISH";
+WiFiClient client;
+
+const int out=2;
+long T;
+float temperature=0;
+float humidity=0;
+DHT dht(out, DHT11);
+
+unsigned long myChannelField=3091110;
+const int TemperatureField=1;
+const int HumidityField=2;
+const char* myWriteAPIKey="L3WZKEA5XZK2PHIT";
+
+void setup() {
+  Serial.begin(115200);
+  ThingSpeak.begin(client);
+  dht.begin();
+  pinMode(out,INPUT);
+
+}
+
+void loop() {
+  if(WiFi.status()!=WL_CONNECTED)
+  {
+    Serial.print("Attempting to connect SSID: ");
+    Serial.println(ssid);
+    while(WiFi.status()!=WL_CONNECTED)
+    {
+      WiFi.begin(ssid,pass);
+      Serial.print(".");
+      delay(5000);
+    }
+    Serial.println("\nConnected.");
+  }
+  temperature=dht.readTemperature();
+  humidity=dht.readHumidity();
+
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" °C");
+  delay(5000);
+  Serial.print("Humidity: ");
+  Serial.print(humidity);
+  Serial.println(" g.m-3");
+  delay(5000);
+
+  ThingSpeak.writeField(myChannelField,TemperatureField,temperature,myWriteAPIKey);
+  ThingSpeak.writeField(myChannelField,HumidityField,humidity,myWriteAPIKey);
+  delay(1000);
+}
+```
 # CIRCUIT DIAGRAM:
 
+![WhatsApp Image 2025-09-26 at 13 40 08_bf00dac3](https://github.com/user-attachments/assets/a298a208-4d6a-4732-8267-7b600ce31331)
+
 # OUTPUT:
+
+<img width="1143" height="683" alt="Screenshot 2025-09-26 134532" src="https://github.com/user-attachments/assets/f6528463-a989-4527-bf5c-ad7555f2a6cc" />
+
+
+<img width="1859" height="755" alt="Screenshot 2025-09-26 114211" src="https://github.com/user-attachments/assets/9dec9271-9625-4253-9a9c-aaab2aac7b46" />
+
 
 # RESULT:
 
