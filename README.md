@@ -76,60 +76,62 @@ Automatically act on your data and communicate using third-party services like T
 
 # PROGRAM:
 ```
-#include "DHT.h"
 #include "ThingSpeak.h"
 #include <WiFi.h>
+#include "DHT.h"
 
-char ssid[]="IPHONE 13";
-char pass[]="NITHISH";
-WiFiClient client;
+char ssid[] = "vivo Y22";
+char pass[] = "12345678";
 
-const int out=2;
+const int out = 2;
 long T;
-float temperature=0;
-float humidity=0;
+float temperature = 0;
+WiFiClient client;
 DHT dht(out, DHT11);
 
-unsigned long myChannelField=3091110;
-const int TemperatureField=1;
-const int HumidityField=2;
-const char* myWriteAPIKey="L3WZKEA5XZK2PHIT";
+unsigned long myChannelField =  3091123;
+const int TemperatureField = 1;
+const int HumidityField = 2; 
+const char* myWriteAPIKey = "AQ5F40ND5QPACRV9";
 
 void setup() {
   Serial.begin(115200);
   ThingSpeak.begin(client);
+  WiFi.mode(WIFI_STA);
   dht.begin();
-  pinMode(out,INPUT);
+  pinMode(out, INPUT);
+  // put your setup code here, to run once:
 
 }
 
-void loop() {
-  if(WiFi.status()!=WL_CONNECTED)
+void loop() 
+{
+  if (WiFi.status() != WL_CONNECTED)
   {
-    Serial.print("Attempting to connect SSID: ");
+    Serial.print("Attempting to conenct to SSID: ");
     Serial.println(ssid);
-    while(WiFi.status()!=WL_CONNECTED)
+    while (WiFi.status() != WL_CONNECTED)
     {
-      WiFi.begin(ssid,pass);
+      WiFi.begin(ssid, pass);
       Serial.print(".");
       delay(5000);
     }
     Serial.println("\nConnected.");
   }
-  temperature=dht.readTemperature();
-  humidity=dht.readHumidity();
+
+  float temperature = dht.readTemperature();
+  float humidity = dht.readHumidity();
 
   Serial.print("Temperature: ");
   Serial.print(temperature);
   Serial.println(" °C");
-  delay(5000);
+
   Serial.print("Humidity: ");
   Serial.print(humidity);
   Serial.println(" g.m-3");
-  delay(5000);
-
-  ThingSpeak.writeField(myChannelField,TemperatureField,temperature,myWriteAPIKey);
-  ThingSpeak.writeField(myChannelField,HumidityField,humidity,myWriteAPIKey);
+ ThingSpeak.setField(TemperatureField, temperature);
+ ThingSpeak.setField(HumidityField, humidity);
+    ThingSpeak.writeField(myChannelField,myWriteAPIKey);
   delay(1000);
 }
 ```
@@ -139,10 +141,11 @@ void loop() {
 
 # OUTPUT:
 
-<img width="1143" height="683" alt="Screenshot 2025-09-26 134532" src="https://github.com/user-attachments/assets/f6528463-a989-4527-bf5c-ad7555f2a6cc" />
+![WhatsApp Image 2025-10-09 at 09 58 55_e90baef0](https://github.com/user-attachments/assets/9d609162-4b98-49d1-bc57-e861cfb45bbf)
 
 
-<img width="1859" height="755" alt="Screenshot 2025-09-26 114211" src="https://github.com/user-attachments/assets/9dec9271-9625-4253-9a9c-aaab2aac7b46" />
+![WhatsApp Image 2025-10-09 at 09 58 56_38689315](https://github.com/user-attachments/assets/259bd4ae-6087-41d5-bbed-158b5a4238d8)
+
 
 
 # RESULT:
